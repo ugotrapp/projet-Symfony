@@ -30,7 +30,8 @@ class AppFixtures extends Fixture
         $this->loadAdmins($manager);
         
         $books = $this->loadBooks($manager, 1000);
-        $this->loadAuthors($manager);
+        $authors = $this->loadAuthors($manager, 500);
+        $types = $this->loadTypes($manager);
         $manager->flush();
     }
     public function loadAdmins(ObjectManager $manager)
@@ -98,7 +99,7 @@ class AppFixtures extends Fixture
         return $books;
     }
 
-    public function loadAuthors(Objectmanager $manager){
+    public function loadAuthors(Objectmanager $manager, int $count){
 
         $authors = [];
 
@@ -130,6 +131,118 @@ class AppFixtures extends Fixture
         $manager->persist($author);
         $authors[] = $author;
        
+        for ($i = 4; $i < $count; $i++) {
+
+            $author = new Author();
+            $author->setLastname($this->faker->lastName);
+            $author->setFirstname($this->faker->firstNameMale);
+           
+            
+            $manager->persist($author);
+            $authors[] = $author;
+    
+            }
+            return $authors;
+    }
+
+    public function loadTypes(Objectmanager $manager) {
+
+        $types = [];
+
+        $type = new Type();
+        $type->setName('poésie');
+        $type->setDescription(NULL);
+
+        $manager->persist($type);
+        $types[] = $type;
+
+        $type = new Type();
+        $type->setName('nouvelle');
+        $type->setDescription(NULL);
+
+        $manager->persist($type);
+        $types[] = $type;
+
+        $type = new Type();
+        $type->setName('roman historique');
+        $type->setDescription(NULL);
+
+        $manager->persist($type);
+        $types[] = $type;
+
+        $type = new Type();
+        $type->setName("roman d'amour");
+        $type->setDescription(NULL);
+
+        $manager->persist($type);
+        $types[] = $type;
+
+        $type = new Type();
+        $type->setName("roman d'aventure");
+        $type->setDescription(NULL);
+
+        $manager->persist($type);
+        $types[] = $type;
+
+        $type = new Type();
+        $type->setName('science fiction');
+        $type->setDescription(NULL);
+
+        $manager->persist($type);
+        $types[] = $type;
+
+        $type = new Type();
+        $type->setName('fantasy');
+        $type->setDescription(NULL);
+
+        $manager->persist($type);
+        $types[] = $type;
+
+        $type = new Type();
+        $type->setName('biographie');
+        $type->setDescription(NULL);
+
+        $manager->persist($type);
+        $types[] = $type;
+
+        $type = new Type();
+        $type->setName('conte');
+        $type->setDescription(NULL);
+
+        $manager->persist($type);
+        $types[] = $type;
+
+        $type = new Type();
+        $type->setName('temoignages');
+        $type->setDescription(NULL);
+
+        $manager->persist($type);
+        $types[] = $type;
+
+        $type = new Type();
+        $type->setName('theatre');
+        $type->setDescription(NULL);
+
+        $manager->persist($type);
+        $types[] = $type;
+
+        $type = new Type();
+        $type->setName('essai');
+        $type->setDescription(NULL);
+
+        $manager->persist($type);
+        $types[] = $type;
+
+        $type = new Type();
+        $type->setName('journal intime');
+        $type->setDescription(NULL);
+
+        $manager->persist($type);
+        $types[] = $type;
+
+        return $types;
+
+
 
     }
       
