@@ -49,9 +49,15 @@ class Book
      */
     private $types;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Loan::class, mappedBy="book")
+     */
+    private $loans;
+
     public function __construct()
     {
         $this->types = new ArrayCollection();
+        $this->loans = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -139,6 +145,36 @@ class Book
     public function removeType(Type $type): self
     {
         $this->types->removeElement($type);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Loan[]
+     */
+    public function getLoans(): Collection
+    {
+        return $this->loans;
+    }
+
+    public function addLoan(Loan $loan): self
+    {
+        if (!$this->loans->contains($loan)) {
+            $this->loans[] = $loan;
+            $loan->setBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLoan(Loan $loan): self
+    {
+        if ($this->loans->removeElement($loan)) {
+            // set the owning side to null (unless already changed)
+            if ($loan->getBook() === $this) {
+                $loan->setBook(null);
+            }
+        }
 
         return $this;
     }

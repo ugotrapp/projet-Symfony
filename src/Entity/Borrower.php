@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\BorrowerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -46,6 +48,16 @@ class Borrower
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $modification_date;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Loan::class, mappedBy="borrower")
+     */
+    private $loans;
+
+    public function __construct()
+    {
+        $this->loans = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +132,36 @@ class Borrower
     public function setModificationDate(?\DateTimeInterface $modification_date): self
     {
         $this->modification_date = $modification_date;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Loan[]
+     */
+    public function getLoans(): Collection
+    {
+        return $this->loans;
+    }
+
+    public function addLoan(Loan $loan): self
+    {
+        if (!$this->loans->contains($loan)) {
+            $this->loans[] = $loan;
+            $loan->setBorrower($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLoan(Loan $loan): self
+    {
+        if ($this->loans->removeElement($loan)) {
+            // set the owning side to null (unless already changed)
+            if ($loan->getBorrower() === $this) {
+                $loan->setBorrower(null);
+            }
+        }
 
         return $this;
     }
