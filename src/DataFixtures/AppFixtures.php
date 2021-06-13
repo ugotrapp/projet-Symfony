@@ -28,10 +28,14 @@ class AppFixtures extends Fixture
     
     {
         $this->loadAdmins($manager);
+
+        $authorPerBooks = 2;
         
-        $books = $this->loadBooks($manager, 1000);
+        
         $authors = $this->loadAuthors($manager, 500);
+        $books = $this->loadBooks($manager,$authors,$authorPerBooks, 1000);
         $types = $this->loadTypes($manager);
+        $borrowers = $this->loadBorrowers($manager);
         $manager->flush();
     }
     public function loadAdmins(ObjectManager $manager)
@@ -43,60 +47,6 @@ class AppFixtures extends Fixture
         $user->setPassword($password);
         $user->setRoles(['ROLE_ADMIN']);
         $manager->persist($user);
-    }
-    public function loadBooks(ObjectManager $manager, int $count)
-    {
-        $books = [];
-
-        $book = new Book();
-        $book->setTitle('Lorem ipsum dolor sit amet');
-        $book->setPublishingYear('2010');
-        $book->setNumberOfPages('100');
-        $book->setIsbnCode('9785786930024');
-
-        $manager->persist($book);
-        $books[] = $book;
-
-        $book = new Book();
-        $book->setTitle('Consectetur adipiscing elit');
-        $book->setPublishingYear('2011');
-        $book->setNumberOfPages('150');
-        $book->setIsbnCode('9783817260935');
-
-        $manager->persist($book);
-        $books[] = $book;
-
-        $book = new Book();
-        $book->setTitle('Mihi quidem Antiochum');
-        $book->setPublishingYear('2012');
-        $book->setNumberOfPages('200');
-        $book->setIsbnCode('9782020493727');
-
-        $manager->persist($book);
-        $books[] = $book;
-
-        $book = new Book();
-        $book->setTitle('Quem audis satis belle');
-        $book->setPublishingYear('2013');
-        $book->setNumberOfPages('250');
-        $book->setIsbnCode('9794059561353');
-
-        $manager->persist($book);
-        $books[] = $book;
-
-        for ($i = 4; $i < $count; $i++) {
-
-        $book = new Book();
-        $book->setTitle($this->faker->sentence($nbWords = 5, $variableNbWords = true));
-        $book->setPublishingYear($this->faker->year($max = 'now'));
-        $book->setNumberOfPages($this->faker->numberBetween($min = 50, $max = 800));
-        $book->setIsbnCode($this->faker->isbn13());
-        
-        $manager->persist($book);
-        $books[] = $book;
-
-        }
-        return $books;
     }
 
     public function loadAuthors(Objectmanager $manager, int $count){
@@ -144,6 +94,87 @@ class AppFixtures extends Fixture
             }
             return $authors;
     }
+    public function loadBooks(ObjectManager $manager, array $authors, int $authorPerBooks, int $count)
+    {
+        $books = [];
+        $authorIndex = 0;
+
+        $book = new Book();
+        $book->setTitle('Lorem ipsum dolor sit amet');
+        $book->setPublishingYear('2010');
+        $book->setNumberOfPages('100');
+        $book->setIsbnCode('9785786930024');
+        $author = $authors[0];
+            
+        $book->setAuthor($author);
+
+        $manager->persist($book);
+        $books[] = $book;
+
+        $book = new Book();
+        $book->setTitle('Consectetur adipiscing elit');
+        $book->setPublishingYear('2011');
+        $book->setNumberOfPages('150');
+        $book->setIsbnCode('9783817260935');
+
+        $author = $authors[1];
+        $book->setAuthor($author);
+       
+        $manager->persist($book);
+        $books[] = $book;
+
+        $book = new Book();
+        $book->setTitle('Mihi quidem Antiochum');
+        $book->setPublishingYear('2012');
+        $book->setNumberOfPages('200');
+        $book->setIsbnCode('9782020493727');
+
+        $author = $authors[2];
+        $book->setAuthor($author);
+
+        $manager->persist($book);
+        $books[] = $book;
+
+        $book = new Book();
+        $book->setTitle('Quem audis satis belle');
+        $book->setPublishingYear('2013');
+        $book->setNumberOfPages('250');
+        $book->setIsbnCode('9794059561353');
+        $book->setAuthor($author);
+
+        $author = $authors[3];
+        $book->setAuthor($author);
+        
+
+        $manager->persist($book);
+        $books[] = $book;
+
+        
+
+        for ($i = 4; $i < $count; $i++) {
+            $author = $authors[$authorIndex];
+            
+            
+            if ($i % $authorPerBooks == 0) {
+                $authorIndex ++;
+            }
+
+        $book = new Book();
+        $book->setTitle($this->faker->sentence($nbWords = 5, $variableNbWords = true));
+        $book->setPublishingYear($this->faker->year($max = 'now'));
+        $book->setNumberOfPages($this->faker->numberBetween($min = 50, $max = 800));
+        $book->setIsbnCode($this->faker->isbn13());
+        $book->setAuthor($author);
+        
+        
+        $manager->persist($book);
+        $books[] = $book;
+            
+        }
+        return $books;
+    }
+
+    
 
     public function loadTypes(Objectmanager $manager) {
 
@@ -241,11 +272,31 @@ class AppFixtures extends Fixture
         $types[] = $type;
 
         return $types;
-
-
-
+        
     }
-      
+    
+    public function loadBorrowers(Objectmanager $manager){
+
+        $borrowers = [];
+        $user = new User();
+        $user->setEmail('foo.foo@example.com');
+        $password = $this->encoder->encodePassword($user, '123');
+        $user->setPassword($password);
+        $user->setRoles(['ROLE_BORROWER']);
+        $manager->persist($user);
+
+        $borrower = new Borrower();
+        $borrower->setLastname('foo');
+        $borrower->setFirstname('foo');
+        $borrower->setPhone('123456789');
+        $borrower->setActive(true);
+        $borrower->setCreationDate(\DateTime::createFromFormat('Y-m-d H:i:s', '2010-01-01 00:00:00'));
+        $borrower->setModificationDate(NULL);
+        $manager->persist($borrower);
+        $borrowers[] = $borrower;
+
+        return $borrowers;
+    }
 
 }
     
