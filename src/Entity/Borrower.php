@@ -54,6 +54,16 @@ class Borrower
      */
     private $loans;
 
+    
+
+   
+
+    
+
+    
+
+    
+
     public function __construct()
     {
         $this->loans = new ArrayCollection();
@@ -165,4 +175,11 @@ class Borrower
 
         return $this;
     }
+
+    
+    
+    
+    
+
+    
 }

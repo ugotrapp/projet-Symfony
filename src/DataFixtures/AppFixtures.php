@@ -33,9 +33,11 @@ class AppFixtures extends Fixture
         
         
         $authors = $this->loadAuthors($manager, 500);
-        $books = $this->loadBooks($manager,$authors,$authorPerBooks, 1000);
         $types = $this->loadTypes($manager);
-        $borrowers = $this->loadBorrowers($manager);
+        $books = $this->loadBooks($manager,$authors,$authorPerBooks,$types, 1000);
+        
+        $borrowers = $this->loadBorrowers($manager,200);
+        $loans = $this->loadLoans($manager, $borrowers, $books, 200);
         $manager->flush();
     }
     public function loadAdmins(ObjectManager $manager)
@@ -94,16 +96,19 @@ class AppFixtures extends Fixture
             }
             return $authors;
     }
-    public function loadBooks(ObjectManager $manager, array $authors, int $authorPerBooks, int $count)
+    public function loadBooks(ObjectManager $manager, array $authors, int $authorPerBooks, array $types, int $count)
     {
         $books = [];
         $authorIndex = 0;
+        $typeIndex = 0;
+        $type = $types[$typeIndex];
 
         $book = new Book();
         $book->setTitle('Lorem ipsum dolor sit amet');
         $book->setPublishingYear('2010');
         $book->setNumberOfPages('100');
         $book->setIsbnCode('9785786930024');
+        $book->addType($type);
         $author = $authors[0];
             
         $book->setAuthor($author);
@@ -275,16 +280,9 @@ class AppFixtures extends Fixture
         
     }
     
-    public function loadBorrowers(Objectmanager $manager){
+    public function loadBorrowers(Objectmanager $manager, int $count){
 
         $borrowers = [];
-        $user = new User();
-        $user->setEmail('foo.foo@example.com');
-        $password = $this->encoder->encodePassword($user, '123');
-        $user->setPassword($password);
-        $user->setRoles(['ROLE_BORROWER']);
-        $manager->persist($user);
-
         $borrower = new Borrower();
         $borrower->setLastname('foo');
         $borrower->setFirstname('foo');
@@ -295,8 +293,99 @@ class AppFixtures extends Fixture
         $manager->persist($borrower);
         $borrowers[] = $borrower;
 
-        return $borrowers;
+        $borrower = new Borrower();
+        $borrower->setLastname('bar');
+        $borrower->setFirstname('bar');
+        $borrower->setPhone('123456789');
+        $borrower->setActive(true);
+        $borrower->setCreationDate(\DateTime::createFromFormat('Y-m-d H:i:s', '2010-01-01 00:00:00'));
+        $borrower->setModificationDate(NULL);
+        $manager->persist($borrower);
+        $borrowers[] = $borrower;
+
+        $borrower = new Borrower();
+        $borrower->setLastname('baz');
+        $borrower->setFirstname('baz');
+        $borrower->setPhone('123456789');
+        $borrower->setActive(true);
+        $borrower->setCreationDate(\DateTime::createFromFormat('Y-m-d H:i:s', '2010-01-01 00:00:00'));
+        $borrower->setModificationDate(NULL);
+        $manager->persist($borrower);
+        $borrowers[] = $borrower;
+
+        for ($i = 3; $i < $count; $i++) {
+
+        $borrower = new Borrower();
+        $borrower->setLastname($this->faker->lastName);
+        $borrower->setFirstname($this->faker->firstNameFemale);
+        $borrower->setPhone($this->faker->e164PhoneNumber);
+        $borrower->setActive($this->faker->boolean);
+        $borrower->setCreationDate($this->faker->dateTimeThisYear($max = 'now', $timezone = null));
+        $borrower->setModificationDate(NULL);
+        $manager->persist($borrower);
+        $borrowers[] = $borrower;
+            }
+            return $borrowers;
     }
+
+    public function loadLoans(Objectmanager $manager, array $borrowers, array $books, int $count){
+        $loan = [];
+        $borrowerIndex = 0;
+        $bookIndex = 0;
+
+        $loan = new Loan();
+        $loan->setLoanDate(\DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-01 10:00:00'));
+        $loan->setReturnDate(\DateTime::createFromFormat('Y-m-d H:i:s', '2020-03-01 10:00:00'));
+        $borrower = $borrowers[0];
+        $book = $books[0];
+            
+        $loan->setBorrower($borrower);
+        $loan->setBook($book);
+
+        $manager->persist($loan);
+        $loans[] = $loan;
+
+        $loan = new Loan(); 
+        $loan->setLoanDate(\DateTime::createFromFormat('Y-m-d H:i:s', '2020-03-01 10:00:00'));
+        $loan->setReturnDate(\DateTime::createFromFormat('Y-m-d H:i:s', '2020-04-01 10:00:00'));
+        $borrower = $borrowers[1];
+        $book = $books[1];
+            
+        $loan->setBorrower($borrower);
+        $loan->setBook($book);
+
+        $manager->persist($loan);
+        $loans[] = $loan;
+
+        $loan = new Loan();
+        $loan->setLoanDate(\DateTime::createFromFormat('Y-m-d H:i:s', '2020-04-01 10:00:00'));
+        $loan->setReturnDate(NULL);
+        $borrower = $borrowers[2];
+        $book = $books[2];
+            
+        $loan->setBorrower($borrower);
+        $loan->setBook($book);
+
+        $manager->persist($loan);
+        $loans[] = $loan;
+
+        for ($i = 3; $i < $count; $i++) {
+        $loan = new Loan();
+        $loan->setLoanDate($this->faker->dateTimeThisYear($max = 'now', $timezone = null));
+        $loan->setReturnDate($this->faker->dateTimeThisYear($max = 'now', $timezone = null));
+        $borrower = $borrowers[$i];
+        $book = $books[$i];
+            
+        $loan->setBorrower($borrower);
+        $loan->setBook($book);
+
+        $manager->persist($loan);
+        $loans[] = $loan;
+        }
+
+        return $loans;
+    }
+
 
 }
     
