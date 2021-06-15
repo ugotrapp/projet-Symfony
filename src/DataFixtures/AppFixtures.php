@@ -102,6 +102,7 @@ class AppFixtures extends Fixture
         $authorIndex = 0;
         $typeIndex = 0;
         $type = $types[$typeIndex];
+        $booksPertype = 10;
 
         $book = new Book();
         $book->setTitle('Lorem ipsum dolor sit amet');
@@ -110,7 +111,7 @@ class AppFixtures extends Fixture
         $book->setIsbnCode('9785786930024');
         $book->addType($type);
         $author = $authors[0];
-            
+        $type = $types[1] ;
         $book->setAuthor($author);
 
         $manager->persist($book);
@@ -121,10 +122,10 @@ class AppFixtures extends Fixture
         $book->setPublishingYear('2011');
         $book->setNumberOfPages('150');
         $book->setIsbnCode('9783817260935');
-
+        $book->addType($type);
         $author = $authors[1];
         $book->setAuthor($author);
-       
+        $type = $types[2];
         $manager->persist($book);
         $books[] = $book;
 
@@ -133,12 +134,14 @@ class AppFixtures extends Fixture
         $book->setPublishingYear('2012');
         $book->setNumberOfPages('200');
         $book->setIsbnCode('9782020493727');
-
+        $book->addType($type);
         $author = $authors[2];
+        $type = $types[3];
         $book->setAuthor($author);
 
         $manager->persist($book);
         $books[] = $book;
+        
 
         $book = new Book();
         $book->setTitle('Quem audis satis belle');
@@ -146,13 +149,15 @@ class AppFixtures extends Fixture
         $book->setNumberOfPages('250');
         $book->setIsbnCode('9794059561353');
         $book->setAuthor($author);
-
+        $book->addType($type);
         $author = $authors[3];
+        $type = $types[4];
         $book->setAuthor($author);
         
 
         $manager->persist($book);
         $books[] = $book;
+        
 
         
 
@@ -160,7 +165,7 @@ class AppFixtures extends Fixture
             $author = $authors[$authorIndex];
             
             
-            if ($i % $authorPerBooks == 0) {
+             if ($i % $authorPerBooks == 0) {
                 $authorIndex ++;
             }
 
@@ -170,7 +175,6 @@ class AppFixtures extends Fixture
         $book->setNumberOfPages($this->faker->numberBetween($min = 50, $max = 800));
         $book->setIsbnCode($this->faker->isbn13());
         $book->setAuthor($author);
-        
         
         $manager->persist($book);
         $books[] = $book;
