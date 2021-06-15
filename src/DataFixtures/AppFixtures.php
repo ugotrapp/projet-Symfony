@@ -36,8 +36,8 @@ class AppFixtures extends Fixture
         $types = $this->loadTypes($manager);
         $books = $this->loadBooks($manager,$authors,$authorPerBooks,$types, 1000);
         
-        $borrowers = $this->loadBorrowers($manager,200);
-        $loans = $this->loadLoans($manager, $borrowers, $books, 200);
+        $borrowers = $this->loadBorrowers($manager,103);
+        $loans = $this->loadLoans($manager, $borrowers, $books, 203);
         $manager->flush();
     }
     public function loadAdmins(ObjectManager $manager)
@@ -178,8 +178,19 @@ class AppFixtures extends Fixture
         
         $manager->persist($book);
         $books[] = $book;
+
+        $typesCount = random_int(1, 2);
+        $randomTypes = $this->faker->randomElements($types, $typesCount);
+        foreach ($randomTypes as $randomType) {
+        $book->addType($randomType);
+
+        $manager->persist($book);
+        $books[] = $book;
             
         }
+
+        
+            }
         return $books;
     }
 
@@ -287,6 +298,14 @@ class AppFixtures extends Fixture
     public function loadBorrowers(Objectmanager $manager, int $count){
 
         $borrowers = [];
+
+        $user = new User();
+        $user->setEmail('foo.foo@example.com');
+        $password = $this->encoder->encodePassword($user, '123');
+        $user->setPassword($password);
+        $user->setRoles(['ROLE_BORROWER']);
+        $manager->persist($user);
+
         $borrower = new Borrower();
         $borrower->setLastname('foo');
         $borrower->setFirstname('foo');
@@ -294,8 +313,16 @@ class AppFixtures extends Fixture
         $borrower->setActive(true);
         $borrower->setCreationDate(\DateTime::createFromFormat('Y-m-d H:i:s', '2010-01-01 00:00:00'));
         $borrower->setModificationDate(NULL);
+        $borrower->setUser($user);
         $manager->persist($borrower);
         $borrowers[] = $borrower;
+
+        $user = new User();
+        $user->setEmail('bar.bar@example.com');
+        $password = $this->encoder->encodePassword($user, '123');
+        $user->setPassword($password);
+        $user->setRoles(['ROLE_BORROWER']);
+        $manager->persist($user);
 
         $borrower = new Borrower();
         $borrower->setLastname('bar');
@@ -304,8 +331,16 @@ class AppFixtures extends Fixture
         $borrower->setActive(true);
         $borrower->setCreationDate(\DateTime::createFromFormat('Y-m-d H:i:s', '2010-01-01 00:00:00'));
         $borrower->setModificationDate(NULL);
+        $borrower->setUser($user);
         $manager->persist($borrower);
         $borrowers[] = $borrower;
+
+        $user = new User();
+        $user->setEmail('baz.baz@example.com');
+        $password = $this->encoder->encodePassword($user, '123');
+        $user->setPassword($password);
+        $user->setRoles(['ROLE_BORROWER']);
+        $manager->persist($user);
 
         $borrower = new Borrower();
         $borrower->setLastname('baz');
@@ -314,10 +349,19 @@ class AppFixtures extends Fixture
         $borrower->setActive(true);
         $borrower->setCreationDate(\DateTime::createFromFormat('Y-m-d H:i:s', '2010-01-01 00:00:00'));
         $borrower->setModificationDate(NULL);
+        $borrower->setUser($user);
         $manager->persist($borrower);
         $borrowers[] = $borrower;
 
+
         for ($i = 3; $i < $count; $i++) {
+
+        $user = new User();
+        $user->setEmail($this->faker->email);
+        $password = $this->encoder->encodePassword($user, '123');
+        $user->setPassword($password);
+        $user->setRoles(['ROLE_BORROWER']);
+        $manager->persist($user);
 
         $borrower = new Borrower();
         $borrower->setLastname($this->faker->lastName);
@@ -326,6 +370,7 @@ class AppFixtures extends Fixture
         $borrower->setActive($this->faker->boolean);
         $borrower->setCreationDate($this->faker->dateTimeThisYear($max = 'now', $timezone = null));
         $borrower->setModificationDate(NULL);
+        $borrower->setUser($user);
         $manager->persist($borrower);
         $borrowers[] = $borrower;
             }
@@ -335,7 +380,7 @@ class AppFixtures extends Fixture
     public function loadLoans(Objectmanager $manager, array $borrowers, array $books, int $count){
         $loan = [];
         $borrowerIndex = 0;
-        $bookIndex = 0;
+        
 
         $loan = new Loan();
         $loan->setLoanDate(\DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-01 10:00:00'));
@@ -373,12 +418,23 @@ class AppFixtures extends Fixture
         $manager->persist($loan);
         $loans[] = $loan;
 
+        $bookIndex = 0;
+        $borrower = 0;
+
         for ($i = 3; $i < $count; $i++) {
+
+        $book = $books[$bookIndex];
+        $bookIndex++;
+        $borrower = $borrowers[$borrowerIndex];
+        $loanPerBorrower = 2;
+            if ($i % $loanPerBorrower == 0) {
+                $borrowerIndex ++;}
         $loan = new Loan();
         $loan->setLoanDate($this->faker->dateTimeThisYear($max = 'now', $timezone = null));
         $loan->setReturnDate($this->faker->dateTimeThisYear($max = 'now', $timezone = null));
-        $borrower = $borrowers[$i];
-        $book = $books[$i];
+        //$book = $books[$i];
+        //$borrower = $borrowers[$i];
+        
             
         $loan->setBorrower($borrower);
         $loan->setBook($book);
@@ -392,4 +448,6 @@ class AppFixtures extends Fixture
 
 
 }
+
+
     
