@@ -36,7 +36,7 @@ class AppFixtures extends Fixture
         $types = $this->loadTypes($manager);
         $books = $this->loadBooks($manager,$authors,$authorPerBooks,$types, 1000);
         
-        $borrowers = $this->loadBorrowers($manager,103);
+        $borrowers = $this->loadBorrowers($manager,100);
         $loans = $this->loadLoans($manager, $borrowers, $books, 203);
         $manager->flush();
     }
@@ -418,32 +418,42 @@ class AppFixtures extends Fixture
         $manager->persist($loan);
         $loans[] = $loan;
 
-        $bookIndex = 0;
-        $borrower = 0;
+        //$bookIndex = 0;
+        //$borrower = 0;
 
         for ($i = 3; $i < $count; $i++) {
+            
+            $randomBooks = $this->faker->randomElements($books);
+            foreach ($randomBooks as $randomBook) {
+                $loan->setBook($randomBook);
+                $manager->persist($loan);
+                $loans[] = $loan;
+                
+            }
 
-        $book = $books[$bookIndex];
-        $bookIndex++;
-        $borrower = $borrowers[$borrowerIndex];
-        $loanPerBorrower = 2;
-            if ($i % $loanPerBorrower == 0) {
-                $borrowerIndex ++;}
+            $borrowersCount = random_int(1, 5);
+            $randomBorrowers = $this->faker->randomElements($borrowers, $borrowersCount);
+            foreach ($randomBorrowers as $randomBorrower) {
+                $loan->setBorrower($randomBorrower);
+                $manager->persist($loan);
+                $loans[] = $loan;
+                
+            }
+        
         $loan = new Loan();
         $loan->setLoanDate($this->faker->dateTimeThisYear($max = 'now', $timezone = null));
-        $loan->setReturnDate($this->faker->dateTimeThisYear($max = 'now', $timezone = null));
-        //$book = $books[$i];
-        //$borrower = $borrowers[$i];
+        $loan_date = $loan->getLoanDate();
+        $return_date = \DateTime::createFromFormat('Y-m-d H:i:s', $loan_date->format('Y-m-d H:i:s'));
+        $return_date->add(new \DateInterval('P1M'));
         
-            
-        $loan->setBorrower($borrower);
-        $loan->setBook($book);
-
+        $loan->setReturnDate($return_date);
+        
+        
         $manager->persist($loan);
         $loans[] = $loan;
         }
 
-        return $loans;
+        return $loans;  
     }
 
 
