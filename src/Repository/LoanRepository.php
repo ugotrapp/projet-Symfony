@@ -36,15 +36,56 @@ class LoanRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Loan
+    public function findByLoan()
     {
         return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
+            ->orderBy('l.loan_date', 'DESC')
+            ->setMaxResults(10)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
-    */
+
+    public function findByBorrower(string $value)
+    {
+        return $this->createQueryBuilder('l')
+            ->innerJoin('l.borrower', 'k')
+            ->andWhere('k.id = :value')
+            ->setParameter('value', $value)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findByBook(string $value)
+    {
+        return $this->createQueryBuilder('l')
+            ->innerJoin('l.book', 'k')
+            ->andWhere('k.id = :value')
+            ->setParameter('value', $value)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findByReturnDate(string $value)
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.return_date < :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findByIdAndReturnDate(int $value)
+    {
+        return $this->createQueryBuilder('l')
+            ->where('l.id = :val')
+            ->andWhere('l.return_date IS NULL')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

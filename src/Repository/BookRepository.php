@@ -20,31 +20,64 @@ class BookRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Book[] Returns an array of Book objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    //   * @return Book[] Returns an array of Book objects
+    //   */
+    
+    public function findByType($value)
     {
         return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
+            ->innerJoin('b.types', 't')
+            ->andWhere('t.name LIKE :type')
+            ->setParameter('type', "%{$value}%")
+            ->orderBy('b.title', 'ASC')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Book
+    public function findByAuthor($id)
     {
         return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
+        ->innerJoin('b.author', 'a')
+        ->andWhere('a.id = :author')
+        ->setParameter('author', $id)
+        ->orderBy('b.title', 'ASC')
+        ->getQuery()
+        ->getResult()
+        ; 
+    }
+        // ->innerJoin('p.user', 'u')
+        //     ->andWhere('p.user = :user')
+        //      ->andWhere('u.roles LIKE :role')
+        //      ->setParameter('user', $user)
+        //      ->setParameter('role', "%{$role}%")
+        //     ->getQuery()
+        //     ->getOneOrNullResult()
+        //  ;
+    
+
+    public function findByTitle($value)
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.title LIKE :title')
+            ->setParameter('title', "%{$value}%")
+            ->orderBy('b.title', 'ASC')
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
-    */
-}
+
+    public function findByRole(string $role)
+     {
+         return $this->createQueryBuilder('u')
+             ->andWhere('u.roles LIKE :role')
+             ->setParameter('role', "%{$role}%")
+             ->orderBy('u.email', 'ASC')
+             ->getQuery()
+             ->getResult()
+        ;
+    }
+ }
+    
+    
+

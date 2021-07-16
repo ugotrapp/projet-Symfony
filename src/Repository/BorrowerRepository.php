@@ -19,22 +19,23 @@ class BorrowerRepository extends ServiceEntityRepository
         parent::__construct($registry, Borrower::class);
     }
 
-    // /**
-    //  * @return Borrower[] Returns an array of Borrower objects
-    //  */
-    /*
-    public function findByExampleField($value)
+     /**
+      * @return Borrower[] Returns an array of Borrower objects
+      */
+    
+
+    
+    public function findByPhone(string $value)
     {
         return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('b.phone LIKE :phone')
+            ->setParameter('phone', "%{$value}%")
+            ->orderBy('b.lastname', 'ASC')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+    
 
     /*
     public function findOneBySomeField($value): ?Borrower
@@ -47,4 +48,45 @@ class BorrowerRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findByFirstnameOrLastname($value)
+    {
+        
+        $qb = $this->createQueryBuilder('s');
+
+        return $qb->where($qb->expr()->orX(
+                $qb->expr()->like('s.firstname', ':value'),
+                $qb->expr()->like('s.lastname', ':value')
+            ))
+           
+            ->setParameter('value', "%{$value}%")
+            ->orderBy('s.firstname', 'ASC')
+            ->orderBy('s.lastname', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findOneByActive(Boolean $value)
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.active = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function findOneByDate(string $value)
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.creation_date < :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    
+
 }

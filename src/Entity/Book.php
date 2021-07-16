@@ -40,7 +40,7 @@ class Book
     private $isbn_code;
 
     /**
-     * @ORM\ManyToOne(targetEntity=author::class, inversedBy="books")
+     * @ORM\ManyToOne(targetEntity=Author::class, inversedBy="books")
      */
     private $author;
 
