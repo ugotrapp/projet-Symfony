@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Book;
  use App\Entity\Author;
+ use App\Entity\Type;
  use Doctrine\ORM\EntityRepository;
  use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -35,7 +36,23 @@ class BookType extends AbstractType
                  },
              ])
 
-            // ->add('types')
+                         
+                         ->add('types', EntityType::class, [
+                             // On précise que ce champ permet de gérer la relation avec une entité SchoolYear
+                                'class' => Type::class,
+                             // Le label qui est affiché utilisera le nom de la school year
+                                'choice_label' => function(Type $type) {
+                                 return "{$type->getName()}";
+                             },
+                             // Les school years sont triés par ordre croissant (c-à-d alphabétique) du champ name
+                                'query_builder' => function (EntityRepository $er) {
+                                 return $er->createQueryBuilder('t')
+                                     ->orderBy('t.name', 'ASC')
+                                 ;
+                             },
+                             'multiple' => true,
+                         ])
+             
         ;
     }
 
