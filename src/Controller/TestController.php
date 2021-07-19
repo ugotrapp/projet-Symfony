@@ -105,7 +105,7 @@ class TestController extends AbstractController
 // - genre : science-fiction (id `6`)
         $book->addType($types[5]);
 
-        $bookId2 = $bookRepository->findAll()[1];
+        $bookId2 = $bookRepository->find(2);
         $bookId2->setTitle('Aperiendum est igitur');
         $bookId2->addType($types[4]);
         $entityManager->persist($bookId2);

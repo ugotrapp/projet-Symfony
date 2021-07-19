@@ -24,22 +24,23 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Genres</a>
+          <a class="nav-link active" aria-current="page" href="{{path('type_index')}}">Genres</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Auteurs</a>
+                                
+          <a class="nav-link" href="{{path('author_index')}}">Auteurs</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Emprunts</a>
+          <a class="nav-link" href="{{path('loan_index')}}">Emprunts</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Emprunteurs</a>
+          <a class="nav-link" href="{{path('borrower_index')}}">Emprunteurs</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Utilisateurs</a>
+          <a class="nav-link" href="{{path('user_index')}}">Utilisateurs</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Login</a>
+          <a class="nav-link" href="{{path('app_login')}}">Login</a>
         </li>
       </ul>
       <form class="d-flex">
