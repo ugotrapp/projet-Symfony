@@ -21,8 +21,8 @@ class HomePageController extends AbstractController
      */
     public function index(BookRepository $bookRepository,Request $request): Response
     {   
-        dump($request->request->all());
-        exit();
+        // dump($request->request->all());
+        // exit();
         return $this->render('book/index.html.twig', [
             'books' => $bookRepository->findAll(),
         ]);

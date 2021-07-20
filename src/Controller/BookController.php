@@ -24,7 +24,7 @@ class BookController extends AbstractController
     {
         return $this->render('book/index.html.twig', [
             'books' => $bookRepository->findAll(),
-            'authors'=>$authorRepository->findAll()
+            
         ]);
     }
 

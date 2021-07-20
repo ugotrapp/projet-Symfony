@@ -5,22 +5,22 @@
 {% block body %}
     <h1>Borrower index</h1>
 
-    <table class="table">
+    <table class="table table-hover">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Lastname</th>
-                <th>Firstname</th>
-                <th>Phone</th>
-                <th>Active</th>
-                <th>Creation_date</th>
-                <th>Modification_date</th>
-                <th>actions</th>
+                <th scope="col">Id</th>
+                <th scope="col">Lastname</th>
+                <th scope="col">Firstname</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Active</th>
+                <th scope="col">Creation_date</th>
+                <th scope="col">Modification_date</th>
+                <th scope="col">actions</th>
             </tr>
         </thead>
         <tbody>
         {% for borrower in borrowers %}
-            <tr>
+            <tr class="table-info">
                 <td>{{ borrower.id }}</td>
                 <td>{{ borrower.lastname }}</td>
                 <td>{{ borrower.firstname }}</td>
