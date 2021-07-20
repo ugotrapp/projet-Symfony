@@ -131,13 +131,13 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         // } elseif (in_array('ROLE_STUDENT', $user->getRoles())) {
         //     $student = $this->studentRepository->findOneByUser($user);
 
-            if (!$borrower) {
-                throw new \Exception("Cet utilisateur n'est rattaché à aucun profil : {$user->getId()} {$user->getEmail()}");
-            }
+            // if (!$borrower) {
+            //     throw new \Exception("Cet utilisateur n'est rattaché à aucun profil : {$user->getId()} {$user->getEmail()}");
+            // }
 
-            $url = $this->urlGenerator->generate('borrower_show', [
-                'id' => $borrower->getId(),
-            ]);
+            // $url = $this->urlGenerator->generate('borrower_show', [
+            //     'id' => $borrower->getId(),
+            // ]);
         // } elseif (in_array('ROLE_CLIENT', $user->getRoles())) {
         //     $url = $this->urlGenerator->generate('project_index');
         } else {

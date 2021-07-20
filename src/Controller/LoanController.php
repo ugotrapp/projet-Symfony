@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Loan;
 use App\Form\LoanType;
 use App\Repository\LoanRepository;
+use App\Repository\BorrowerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,10 +19,29 @@ class LoanController extends AbstractController
     /**
      * @Route("/", name="loan_index", methods={"GET"})
      */
-    public function index(LoanRepository $loanRepository): Response
+    public function index(LoanRepository $loanRepository, BorrowerRepository $borrowerRepository): Response
     {
+        $user = $this->getUser();
+        $loans = $loanRepository->findAll();
+
+        // On récupère le compte de l'utilisateur authentifié
+        
+
+        // On vérifie si l'utilisateur est un student
+        // Note : on peut aussi utiliser $this->isGranted('ROLE_STUDENT') au
+        // lieu de in_array('ROLE_STUDENT', $user->getRoles()).
+        if ($this->isGranted('ROLE_BORROWER')) {
+            // L'utilisateur est un student
+
+            // On récupère le profil student lié au compte utilisateur
+            $borrower = $borrowerRepository->findOneByUser($user);
+
+            // On récupère la school year de l'utilisater 
+            $loans = $borrower->getLoans();
+            
+        }
         return $this->render('loan/index.html.twig', [
-            'loans' => $loanRepository->findAll(),
+            'loans' => $loans,
         ]);
     }
 

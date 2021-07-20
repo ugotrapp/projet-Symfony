@@ -11,4 +11,6 @@ import './styles/app.scss';
 // start the Stimulus application
 import './bootstrap';
 
+import "bootswatch/dist/sketchy/bootstrap.min.css";
+
 

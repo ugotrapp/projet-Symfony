@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/borrower")
@@ -28,13 +29,22 @@ class BorrowerController extends AbstractController
     /**
      * @Route("/new", name="borrower_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         $borrower = new Borrower();
         $form = $this->createForm(BorrowerType::class, $borrower);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        
+            if ($form->isSubmitted() && $form->isValid()) {
+                // encode the plain password
+                $user = $borrower->getUser();
+                $user->setPassword(
+                    $passwordEncoder->encodePassword(
+                        $user,
+                        $form->get('user')->get('plainPassword')->getData()
+                    )
+                );
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($borrower);
             $entityManager->flush();

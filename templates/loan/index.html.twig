@@ -5,18 +5,19 @@
 {% block body %}
     <h1>Loan index</h1>
 
-    <table class="table">
+    <table class="table table-hover">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>Loan_date</th>
-                <th>Return_date</th>
-                <th>actions</th>
+            <tr class="table-primary">
+                <th scope="col">Id</th>
+                <th scope="col">Loan_date</th>
+                <th scope="col">Return_date</th>
+                <th scope="col">actions</th>
             </tr>
         </thead>
         <tbody>
         {% for loan in loans %}
-            <tr>
+            <tr class="table-primary">
+            
                 <td>{{ loan.id }}</td>
                 <td>{{ loan.loanDate ? loan.loanDate|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ loan.returnDate ? loan.returnDate|date('Y-m-d H:i:s') : '' }}</td>
