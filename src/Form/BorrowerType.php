@@ -3,6 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Borrower;
+use App\Entity\User;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -18,7 +21,10 @@ class BorrowerType extends AbstractType
             ->add('active')
             ->add('creation_date')
             ->add('modification_date')
-            ->add('user')
+            ->add('user', EntityType::class, [
+                'class' => User::class,
+                'choice_label' => 'username',
+            ])
         ;
     }
 

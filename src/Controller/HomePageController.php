@@ -17,10 +17,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomePageController extends AbstractController
 {
     /**
-     * @Route("/", name="home_index", methods={"GET"})
+     * @Route("/", name="home_index", methods={"GET","POST"})
      */
-    public function index(BookRepository $bookRepository): Response
-    {
+    public function index(BookRepository $bookRepository,Request $request): Response
+    {   
+        dump($request->request->all());
+        exit();
         return $this->render('book/index.html.twig', [
             'books' => $bookRepository->findAll(),
         ]);
