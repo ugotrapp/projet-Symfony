@@ -10,6 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 /**
  * @Route("/loan")
@@ -71,12 +73,29 @@ class LoanController extends AbstractController
     /**
      * @Route("/{id}", name="loan_show", methods={"GET"})
      */
-    public function show(Loan $loan): Response
+    public function show(Loan $loan, BorrowerRepository $borrowerRepository): Response
     {
+        if ($this->isGranted('ROLE_BORROWER')) {
+            // L'utilisateur est un EMPRUNTEUR
+            
+            // On récupère le compte de l'utilisateur authentifié
+            $user = $this->getUser();
+
+            // On récupère le profil student lié au compte utilisateur
+            $borrower = $borrowerRepository->findOneByUser($user);
+
+            // On vérifie si la school year que l'utilisateur demande et la school year
+            // auquel il est rattaché correspondent.
+            // Si ce n'est pas le cas on lui renvoit un code 404
+            if (!$borrower->getLoans()->contains($loan)){
+                throw new NotFoundHttpException();
+            }
+
+        }
         return $this->render('loan/show.html.twig', [
-            'loan' => $loan,
-        ]);
-    }
+            'loan' => $loan,]);
+        
+        }
 
     /**
      * @Route("/{id}/edit", name="loan_edit", methods={"GET","POST"})

@@ -26,10 +26,7 @@ class BorrowerType extends AbstractType
             ->add('active')
             ->add('creation_date')
             ->add('modification_date')
-            // ->add('user', EntityType::class, [
-            //     'class' => User::class,
-            //     'choice_label' => 'username',
-            // ])
+            
             
         ;
     }

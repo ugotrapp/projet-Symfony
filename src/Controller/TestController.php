@@ -32,52 +32,68 @@ class TestController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
 
-        // $user = $userRepository->findAll();
-        // dump($user);
+        ### Les utilisateurs
 
+        // - la liste complète de tous les utilisateurs (de la table `user`)
+        $user = $userRepository->findAll();
+        dump($user);
+
+        // - les données de l'utilisateur dont l'email est `foo.foo@example.com`
         $user = $userRepository->findOneBy(['email'=>'foo.foo@example.com']);
         dump($user);
 
+        // - les données de l'utilisateur dont l'id est `1`
         $user = $userRepository->find(1);
         dump($user);
 
         //  les données des utilisateurs dont l'attribut `roles` contient le mot clé `ROLE_EMPRUNTEUR
         $borrowerRole = $userRepository->findByRole('ROLE_BORROWER');
-        dump($borrowerRole); 
+        dump($borrowerRole);
+        
+        ### Les emprunteurs
 
-        // $borrower = $borrowerRepository->findAll();
-        // dump($borrower);
+        // - la liste complète des emprunteurs
+        $borrower = $borrowerRepository->findAll();
+        dump($borrower);
 
         // $borrower = $borrowerRepository->find(3);
-        // dump($borrower);
+        dump($borrower);
 
-        // $borrower = $borrowerRepository->findOneByUser(3);
-        // dump($borrower);
+        // - les données de l'emprunteur qui est relié au user dont l'id est `3`
+        $borrower = $borrowerRepository->findOneByUser(3);
+        dump($borrower);
 
-        // $borrower = $borrowerRepository->findByFirstnameOrLastname('foo');
-        // dump($borrower);
+        // - la liste des emprunteurs dont le nom ou le prénom contient le mot clé `foo`
+        $borrower = $borrowerRepository->findByFirstnameOrLastname('foo');
+        dump($borrower);
 
-        // $borrower = $borrowerRepository->findByPhone('1234');
-        // dump($borrower);
+        // - la liste des emprunteurs dont le téléphone contient le mot clé `1234`
+        $borrower = $borrowerRepository->findByPhone('1234');
+        dump($borrower);
+
+        // - la liste des emprunteurs dont la date de création est antérieure au 01/03/2021 exclu (c-à-d strictement plus petit)
         $borrower = $borrowerRepository->findOneByDate('2021-03-01');
         dump($borrower);
 
+        // - la liste des emprunteurs inactifs (c-à-d dont l'attribut `actif` est égal à `false`)
         $borrowerInactif = $borrowerRepository->findByActive(false);
         dump($borrowerInactif);
 
-// - la liste complète de tous les livres
-        // $book = $bookRepository->findAll();
-        // dump($book);
-// - les données du livre dont l'id est `1`
-        // $book = $bookRepository->find(1);
-        // dump($book);
-// - la liste des livres dont le titre contient le mot clé `lorem`
-        // $book = $bookRepository->findByTitle('lorem');
-        // dump($book);
-// - la liste des livres dont l'id de l'auteur est `2`
+        ### Les livres
+
+        // - la liste complète de tous les livres
+        $book = $bookRepository->findAll();
+        dump($book);
+        // - les données du livre dont l'id est `1`
+        $book = $bookRepository->find(1);
+        dump($book);
+        // - la liste des livres dont le titre contient le mot clé `lorem`
+        $book = $bookRepository->findByTitle('lorem');
+        dump($book);
+        // - la liste des livres dont l'id de l'auteur est `2`
         $books = $bookRepository->findByAuthor(2);
         dump($books);
-// - la liste des livres dont le genre contient le mot clé `roman`
+        // - la liste des livres dont le genre contient le mot clé `roman`
         $books = $bookRepository->findByType('roman');
         
         foreach($books as $book){
@@ -86,35 +102,39 @@ class TestController extends AbstractController
                 }
                 dump(null);
         }
+
+
         $authors=$authorRepository->findAll();
         $types=$typeRepository->findAll();
-//         - ajouter un nouveau livre
+        // - ajouter un nouveau livre
         $book = new Book();
-// - titre : Totum autem id externum
+        // - titre : Totum autem id externum
         $book->setTitle('Totum autem id externum');
-// - année d'édition : 2020
+        // - année d'édition : 2020
         $book->setPublishingYear('2020');
-// - nombre de pages : 300
+        // - nombre de pages : 300
         $book->setNumberOfPages(300);
-// - code ISBN : 9790412882714
-        $book->setIsbnCode('9790412882714');
-// - auteur : Hugues Cartier (id `2`)
+        // - code ISBN : 9790412882714
+        $book->setIsbnCode('9790412882714');    
+        // - auteur : Hugues Cartier (id `2`)
         $book->setAuthor($authors[1]);
         
 
 // - genre : science-fiction (id `6`)
         $book->addType($types[5]);
-
-        $bookId2 = $bookRepository->find(2);
-        $bookId2->setTitle('Aperiendum est igitur');
-        $bookId2->addType($types[4]);
-        $entityManager->persist($bookId2);
+        // - modifier le livre dont l'id est `2`
+        $bookIdTwo = $bookRepository->find(2);
+        // - titre : Aperiendum est igitur
+        $bookIdTwo->setTitle('Aperiendum est igitur');
+        // - genre : roman d'aventure (id `5`)
+        $bookIdTwo->addType($types[4]);
+        $entityManager->persist($bookIdTwo);
         $entityManager->flush();
-        dump($bookId2);
+        dump($bookIdTwo);
 
         dump($book);
 
-
+        // - supprimer le livre dont l'id est `123`
         // $removeBook= $bookRepository->findById(123);
         // $entityManager->remove($removeBook[0]);
         // $entityManager->flush();
@@ -133,12 +153,12 @@ class TestController extends AbstractController
         dump($loans);
 
         // emprunts de l'emprunteur dont l'id est 2
-        $borrowerId2 = $loanRepository->findByBorrower(2);
-        dump($borrowerId2);
+        $borrowerIdTwo = $loanRepository->findByBorrower(2);
+        dump($borrowerIdTwo);
 
         // emprunts du livre dont l'id est 3
-        $bookId3 = $loanRepository->findByBook(3);
-        dump($bookId3);
+        $bookIdThree = $loanRepository->findByBook(3);
+        dump($bookIdThree);
 
         // emprunts qui ont été retournés avant le 01/01/2021
         $loan = $loanRepository->findByReturnDate('2021-01-01');

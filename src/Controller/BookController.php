@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Book;
 use App\Entity\Author;
 use App\Form\BookType;
+use App\Form\SearchType;
 use App\Repository\BookRepository;
 use App\Repository\AuthorRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,15 +19,22 @@ use Symfony\Component\Routing\Annotation\Route;
 class BookController extends AbstractController
 {
     /**
-     * @Route("/", name="book_index", methods={"GET"})
+     * @Route("/", name="book_index", methods={"GET", "POST"})
      */
-    public function index(BookRepository $bookRepository, AuthorRepository $authorRepository): Response
+    public function index(BookRepository $bookRepository, AuthorRepository $authorRepository,Request $request): Response
     {
+        // 
+        $books= $bookRepository->findAll();
+       
+        
+        
+
         return $this->render('book/index.html.twig', [
-            'books' => $bookRepository->findAll(),
-            
-        ]);
+                'books' => $bookRepository->findAll(),
+                
+            ]);
     }
+           
 
     /**
      * @Route("/new", name="book_new", methods={"GET","POST"})

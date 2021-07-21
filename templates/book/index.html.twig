@@ -3,17 +3,20 @@
 {% block title %}Book index{% endblock %}
 
 {% block body %}
-    <h1>Book index</h1>
+    <h1>Page des livres</h1>
 
     <table class="table table-hover">
         <thead>
             <tr>
                 {# <th scope="col">Id</th> #}
-                <th scope="col">Title</th>
-                <th scope="col">Publishing_year</th>
-                <th scope="col">Number_of_pages</th>
-                <th scope="col">Isbn_code</th>
-                <th scope="col">Author<th>
+                <th scope="col">titres</th>
+                <th scope='col'>disponibilités</th>
+                <th scope="col">année de publication</th>
+                <th scope="col">nombre de pages</th>
+                <th scope="col">code isnb</th>
+                <th scope="col">auteurs</th>
+
+
                 {% if is_granted('ROLE_ADMIN') %}
                 <th scope="col">actions</th>
                 {% endif %}
@@ -24,17 +27,24 @@
         <tbody>
         {% for book in books %}
             <tr class="table-info">
-                {# <td>{{ book.id }}</td> #}
-                <td>{{ book.title }}</td>
+                
+                <td><a href="{{ path('book_show', {'id': book.id}) }}" class="text-info">{{ book.title }}<a/></td>
+                {% if book.isAvailable %}
+                <td class="text-success">disponible</td>
+                {% else %}
+                <td class="text-danger">non disponible</td>
+                {% endif %}
                 <td>{{ book.publishingYear }}</td>
                 <td>{{ book.numberOfPages }}</td>
                 <td>{{ book.isbnCode }}</td>
+                
                 <td>{{ book.author.lastname }} {{book.author.firstname}}</td>
+                
                 
                 <td>
                     {% if is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('book_show', {'id': book.id}) }}">show</a>
-                    <a href="{{ path('book_edit', {'id': book.id}) }}">edit</a>
+                    <a href="{{ path('book_show', {'id': book.id}) }}" class="btn btn-info btn-sm">détails</a>
+                    <a href="{{ path('book_edit', {'id': book.id}) }}" class="btn btn-success btn-sm">éditer</a>
                     {% endif %}
                     
                 </td>
@@ -47,6 +57,6 @@
         </tbody>
     </table>
     {% if is_granted('ROLE_ADMIN') %}
-    <a href="{{ path('book_new') }}">Create new</a>
+    <a href="{{ path('book_new') }}">ajouter un livre</a>
     {% endif %}
 {% endblock %}

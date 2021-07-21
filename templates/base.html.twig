@@ -50,12 +50,12 @@
           {% endif %}
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{path('app_login')}}">Login</a>
+          <a class="nav-link" href="{{path('app_login')}}">Connexion</a>
         </li>
       </ul>
       <form action="{{path('home_index')}}" class="d-flex" method="post">
-        <input name="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button type="button" class="btn btn-info">Search</button>
+        <input name="search" class="form-control me-2" type="search" placeholder="Rechercher un livre" aria-label="Search">
+        <button type="submit" class="btn btn-info">Rechercher</button>
       </form>
     </div>
   </div>

@@ -7,32 +7,43 @@
 
     <table class="table">
         <tbody>
-            <tr>
+            {# <tr>
                 <th>Id</th>
                 <td>{{ book.id }}</td>
-            </tr>
+            </tr> #}
             <tr>
-                <th>Title</th>
+                <th>titre</th>
                 <td>{{ book.title }}</td>
             </tr>
             <tr>
-                <th>Publishing_year</th>
+                <th>année de publication</th>
                 <td>{{ book.publishingYear }}</td>
             </tr>
             <tr>
-                <th>Number_of_pages</th>
+                <th>nombre de pages</th>
                 <td>{{ book.numberOfPages }}</td>
             </tr>
             <tr>
-                <th>Isbn_code</th>
+                <th>code isbn</th>
                 <td>{{ book.isbnCode }}</td>
+            </tr>
+            <tr>
+                <th>genres</th>
+                <td>
+                    
+                        {% for type in book.types %}
+                            {{ type.name }}{% if not loop.last%},{% endif %}
+                        {% endfor %}
+                    
+                    
+                </td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('book_index') }}">back to list</a>
+    <button href="{{ path('book_index') }}" class="btn btn-secondary btn-sm">retour</button>
 
-    <a href="{{ path('book_edit', {'id': book.id}) }}">edit</a>
+   <a href="{{ path('book_edit', {'id': book.id}) }}" class="btn btn-secondary btn-sm">éditer</a>
 
     {{ include('book/_delete_form.html.twig') }}
 {% endblock %}
