@@ -39,7 +39,7 @@ class BookRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('b')
         ->innerJoin('b.author', 'a')
-        ->andWhere('a.id = :author')
+        ->andWhere('a.lastname = :author')
         ->setParameter('author', $id)
         ->orderBy('b.title', 'ASC')
         ->getQuery()
@@ -75,6 +75,21 @@ class BookRepository extends ServiceEntityRepository
              ->orderBy('u.email', 'ASC')
              ->getQuery()
              ->getResult()
+        ;
+    }
+
+    public function findByTitleOrAuthorLastnameAndFirstname($value)
+    {
+        return $this->createQueryBuilder('b')
+            ->innerJoin('b.author', 'a')
+            ->andWhere('a.lastname LIKE :author')
+            ->orWhere('b.title LIKE :title')
+            ->orWhere('a.firstname LIKE :author')
+            ->setParameter('title', "%{$value}%")
+            ->setParameter('author', "%{$value}%")
+            ->orderBy('b.title', 'ASC')
+            ->getQuery()
+            ->getResult()
         ;
     }
  }

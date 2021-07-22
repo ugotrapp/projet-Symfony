@@ -41,9 +41,9 @@
         </tbody>
     </table>
 
-    <button href="{{ path('book_index') }}" class="btn btn-secondary btn-sm">retour</button>
-
+    <a href="{{ path('book_index') }}" class="btn btn-secondary btn-sm">retour</a>
+    {% if is_granted ('ROLE_ADMIN') %}
    <a href="{{ path('book_edit', {'id': book.id}) }}" class="btn btn-secondary btn-sm">éditer</a>
-
+    {% endif %}
     {{ include('book/_delete_form.html.twig') }}
 {% endblock %}

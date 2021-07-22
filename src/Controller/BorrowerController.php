@@ -37,7 +37,6 @@ class BorrowerController extends AbstractController
 
         
             if ($form->isSubmitted() && $form->isValid()) {
-                // encode the plain password
                 $user = $borrower->getUser();
                 $user->setPassword(
                     $passwordEncoder->encodePassword(

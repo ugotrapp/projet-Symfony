@@ -43,7 +43,7 @@
                 
                 <td>
                     {% if is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('book_show', {'id': book.id}) }}" class="btn btn-info btn-sm">détails</a>
+                    {# <a href="{{ path('book_show', {'id': book.id}) }}" class="btn btn-info btn-sm">détails</a> #}
                     <a href="{{ path('book_edit', {'id': book.id}) }}" class="btn btn-success btn-sm">éditer</a>
                     {% endif %}
                     

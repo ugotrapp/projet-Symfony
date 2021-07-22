@@ -19,6 +19,17 @@ class AuthorRepository extends ServiceEntityRepository
         parent::__construct($registry, Author::class);
     }
 
+    public function findByLastname($value)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.lastname LIKE :lastname')
+            ->setParameter('lastname', "%{$value}%")
+            ->orderBy('a.lastname', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return Author[] Returns an array of Author objects
     //  */
