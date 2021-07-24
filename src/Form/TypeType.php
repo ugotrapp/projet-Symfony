@@ -3,6 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Type;
+use App\Entity\Book;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,8 +16,8 @@ class TypeType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('description')
-            ->add('books')
+            // ->add('description')
+            
         ;
     }
 

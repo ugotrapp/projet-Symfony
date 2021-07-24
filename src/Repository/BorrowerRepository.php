@@ -101,6 +101,18 @@ class BorrowerRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
      }
+
+     public function findByBorrower($value)
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.lastname LIKE :borrower')
+            ->setParameter('borrower', "%{$value}%")
+            ->orderBy('b.title', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+
+    }
  }
 
 

@@ -25,12 +25,16 @@ class HomePageController extends AbstractController
         // dump($request->request->all());
         // exit();
         $books= $bookRepository->findAll();
+        // dump($books);
+        // exit();
         
 
         
         if ($request->request->all()) {
             $search = $request->request->get('search');
-            $books = $bookRepository->findByTitleOrAuthorLastnameAndFirstname($search);
+            // dump($search);
+            // exit();
+            $books = $bookRepository->findByTitleOrAuthor($search);
         }
 
         return $this->render('book/index.html.twig', [
@@ -38,4 +42,5 @@ class HomePageController extends AbstractController
             
         ]);
     }
+
 }

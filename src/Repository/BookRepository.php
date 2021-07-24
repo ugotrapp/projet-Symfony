@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Book;
+use App\Entity\Borrower;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -78,7 +79,7 @@ class BookRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findByTitleOrAuthorLastnameAndFirstname($value)
+    public function findByTitleOrAuthor($value)
     {
         return $this->createQueryBuilder('b')
             ->innerJoin('b.author', 'a')
@@ -94,6 +95,7 @@ class BookRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+    
  }
     
     

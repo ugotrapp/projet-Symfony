@@ -39,18 +39,18 @@ security:
         #  - { path: ^/admin, roles: ROLE_ADMIN }
         #  - { path: ^/profile, roles: ROLE_USER }
 
-        - { path: "^/loan/[0-9]+/edit", roles: [ROLE_ADMIN] }
-        - { path: "^/loan/[0-9]+/?$", roles: [ROLE_ADMIN, ROLE_BORROWER] }
-        - { path: ^/loan/new, roles: [ROLE_ADMIN] }
-        - { path: ^/loan, roles: [ROLE_ADMIN, ROLE_BORROWER] }
+        - { path: "^/loan/[0-9]+/edit", roles: [ROLE_ADMIN] } ##  seul l 'admin peut editer les emprunts
+        - { path: "^/loan/[0-9]+/?$", roles: [ROLE_ADMIN, ROLE_BORROWER] } ## admins et emprunteurs peuvent consulter les emprunts
+        - { path: ^/loan/new, roles: [ROLE_ADMIN] } ## seul l'admin peut ajouter des nouveaux emprunts
+        - { path: ^/loan, roles: [ROLE_ADMIN, ROLE_BORROWER] } ## admins et emprunteurs ont acces a la page d acceuil des emprunts
 
         - { path: ^/author, roles: [ROLE_ADMIN, ROLE_BORROWER] }
         - { path: "^/author/[0-9]+/?$", roles: [ROLE_ADMIN, ROLE_BORROWER]}
         - { path: "^/author/new", roles: ROLE_ADMIN }
         - { path: "^/author/[0-9]+/edit", roles: ROLE_ADMIN }
 
-        - { path: ^/book, roles: [ROLE_ADMIN, ROLE_BORROWER] }
-        - { path: "^/book/[0-9]+/?$", roles: [ROLE_ADMIN, ROLE_BORROWER] }
+        # - { path: ^/book, roles: [ROLE_ADMIN, ROLE_BORROWER] }
+        # - { path: "^/book/[0-9]+/?$", roles: [ROLE_ADMIN, ROLE_BORROWER] }
         - { path: "^/book/new", roles: ROLE_ADMIN }
         - { path: "^/book/[0-9]+/edit", roles: ROLE_ADMIN }
 
