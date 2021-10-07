@@ -3,12 +3,10 @@
 {% block title %}Book index{% endblock %}
 
 {% block body %}
-    <h1>Page des livres</h1>
-
     <table class="table table-hover">
         <thead>
             <tr>
-                {# <th scope="col">Id</th> #}
+                <th scope="col">Id</th>
                 <th scope="col">titres</th>
                 <th scope='col'>disponibilités</th>
                 <th scope="col">année de publication</th>
@@ -26,9 +24,9 @@
         </thead>
         <tbody>
         {% for book in books %}
-            <tr class="table-info">
-                
-                <td><a href="{{ path('book_show', {'id': book.id}) }}" class="text-info">{{ book.title }}<a/></td>
+            <tr class="table-default">
+                <td>{{book.id}}</td>
+                <td class="deco"><a href="{{ path('book_show', {'id': book.id}) }}" class="text-info">{{ book.title }}<a/></td>
                 {% if book.isAvailable %}
                 <td class="text-success">disponible</td>
                 {% else %}
@@ -51,7 +49,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="6">aucun resultat</td>
             </tr>
         {% endfor %}
         </tbody>

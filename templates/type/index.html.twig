@@ -9,7 +9,7 @@
         <thead>
             <tr>
                 <th scope="col">Id</th>
-                <th scope="col">Name</th>
+                <th scope="col">Nom</th>
                 <th scope="col">Description</th>
                 <th scope="col">actions</th>
                 
@@ -26,8 +26,8 @@
                 
                 
                 <td>
-                    <a href="{{ path('type_show', {'id': type.id}) }}">show</a>
-                    <a href="{{ path('type_edit', {'id': type.id}) }}">edit</a>
+                    <a class="btn btn-info btn-sm" href="{{ path('type_show', {'id': type.id}) }}">détails</a>
+                    <a class="btn btn-success btn-sm" href="{{ path('type_edit', {'id': type.id}) }}">éditer</a>
                 </td>
             </tr>
         {% else %}
@@ -38,5 +38,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('type_new') }}">Create new</a>
+    <a href="{{ path('type_new') }}">créer</a>
 {% endblock %}

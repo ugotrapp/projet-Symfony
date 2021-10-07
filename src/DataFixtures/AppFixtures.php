@@ -8,6 +8,7 @@ use App\Entity\Book;
 use App\Entity\Borrower;
 use App\Entity\Loan;
 use App\Entity\Type;
+use App\Entity\Menu;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory as FakerFactory;
@@ -35,11 +36,70 @@ class AppFixtures extends Fixture
         $authors = $this->loadAuthors($manager, 500);
         $types = $this->loadTypes($manager);
         $books = $this->loadBooks($manager,$authors,$authorPerBooks,$types, 1000);
+        $menu = $this->loadMenu($manager);
         
         $borrowers = $this->loadBorrowers($manager,100);
         $loans = $this->loadLoans($manager, $borrowers, $books, 203);
         $manager->flush();
     }
+
+    public function loadMenu(ObjectManager  $manager)
+    {
+
+        $menu = new Menu();
+        $menu->setSauce('mayo');
+        $menu->setBase(['sans salade','sans oignons', 'sans tomate']);
+        $menu->setDrink('coca');
+        $menu->setExtra(['mozza', 'chili cheese', 'oignons ring']);
+        $manager->persist($menu);
+
+        $menu = new Menu();
+        $menu->setSauce('samourai');
+        $menu->setBase(['sans salade','sans oignons', 'sans tomate', 'fromage feta', 'fromage cheddar']);
+        $menu->setDrink('sprite');
+        $menu->setExtra(['mozza', 'chili cheese', 'oignons ring']);
+        $manager->persist($menu);
+
+        $menu = new Menu();
+        $menu->setSauce('pita');
+        $menu->setBase(['sans salade','sans oignons', 'sans tomate']);
+        $menu->setDrink('orangina');
+        $menu->setExtra(['mozza']);
+        $manager->persist($menu);
+
+        $menu = new Menu();
+        $menu->setSauce('blanche');
+        $menu->setBase(['sans salade','sans oignons', 'sans tomate', 'fromage feta', 'fromage cheddar']);
+        $menu->setDrink('fanta');
+        $menu->setExtra(['mozza', 'chili cheese', 'oignons ring']);
+        $manager->persist($menu);
+
+        $menu = new Menu();
+        $menu->setSauce('blanche');
+        $menu->setBase([ 'fromage feta', 'sans oignons']);
+        $menu->setDrink('fanta');
+        $menu->setExtra(['mozza']);
+        $manager->persist($menu);
+
+        $menu = new Menu();
+        $menu->setSauce('blanche');
+        $menu->setBase([ 'fromage feta']);
+        $menu->setDrink('fanta');
+        $menu->setExtra(['chili cheese']);
+        $manager->persist($menu);
+
+        $menu = new Menu();
+        $menu->setSauce('blanche');
+        $menu->setBase([ 'sans salade', 'fromage cheddar']);
+        $menu->setDrink('fanta');
+        $menu->setExtra(['mozza']);
+        $manager->persist($menu);
+
+
+        return $menu;
+    }
+
+
     public function loadAdmins(ObjectManager $manager)
     {
         
@@ -202,42 +262,42 @@ class AppFixtures extends Fixture
 
         $type = new Type();
         $type->setName('poésie');
-        $type->setDescription(NULL);
+        $type->setDescription("La poésie est un genre littéraire très ancien, aux formes variées, écrites généralement en vers mais qui admettent aussi la prose, et qui privilégient l'expressivité de la forme");
 
         $manager->persist($type);
         $types[] = $type;
 
         $type = new Type();
         $type->setName('nouvelle');
-        $type->setDescription(NULL);
+        $type->setDescription('Une nouvelle est un récit habituellement court');
 
         $manager->persist($type);
         $types[] = $type;
 
         $type = new Type();
         $type->setName('roman historique');
-        $type->setDescription(NULL);
+        $type->setDescription("Un roman historique est une des formes variées du roman.Œuvre de fiction historique, elle prend pour toile de fond un épisode (parfois majeur) de l'Histoire");
 
         $manager->persist($type);
         $types[] = $type;
 
         $type = new Type();
         $type->setName("roman d'amour");
-        $type->setDescription(NULL);
+        $type->setDescription("Le roman d'amour est un type de roman appelé aussi « roman sentimental » ou, de manière péjorative, « roman à l'eau de rose »");
 
         $manager->persist($type);
         $types[] = $type;
 
         $type = new Type();
         $type->setName("roman d'aventure");
-        $type->setDescription(NULL);
+        $type->setDescription("Le roman d’aventures est un type de roman populaire qui met particulièrement l'accent sur l'action en multipliant les péripéties, dans lequel le héros est plutôt masculin et jeune et où le souci de la forme littéraire est relativement peu important");
 
         $manager->persist($type);
         $types[] = $type;
 
         $type = new Type();
         $type->setName('science fiction');
-        $type->setDescription(NULL);
+        $type->setDescription("La science-fiction est un genre narratif, cinématographique et vidéo-ludique. Comme son nom l'indique, elle consiste à raconter des fictions reposant sur des progrès scientifiques et techniques obtenus dans un futur plus ou moins lointain ");
 
         $manager->persist($type);
         $types[] = $type;

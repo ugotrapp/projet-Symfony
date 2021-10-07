@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Borrower;
 use App\Form\BorrowerType;
+use App\Form\SearchBorrowersType;
+use App\Repository\BookRepository;
 use App\Repository\BorrowerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,14 +19,25 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class BorrowerController extends AbstractController
 {
     /**
-     * @Route("/", name="borrower_index", methods={"GET"})
+     * @Route("/", name="borrower_index", methods={"GET","POST"})
      */
-    public function index(BorrowerRepository $borrowerRepository): Response
+    public function index(BorrowerRepository $borrowerRepository, BookRepository $bookRepository, Request $request): Response
     {
+        $searchBorrowers = $this->createForm(SearchBorrowersType::class, null);
+
+        $searchBorrowers->handleRequest($request);
+
+        if ($searchBorrowers->isSubmitted() && $searchBorrowers->isValid()) {
+            $borrowers = $searchBorrowers->getData()['borrowers'];
+        }
+
+
         return $this->render('borrower/index.html.twig', [
-            'borrowers' => $borrowerRepository->findAll(),
+            'borrowers' => empty($borrowers) ? $borrowerRepository->findAll() : $borrowerRepository->findByFirstnameOrLastname($borrowers),
+            'searchBorrowers' => $searchBorrowers->createView()
         ]);
     }
+
 
     /**
      * @Route("/new", name="borrower_new", methods={"GET","POST"})
@@ -35,15 +48,15 @@ class BorrowerController extends AbstractController
         $form = $this->createForm(BorrowerType::class, $borrower);
         $form->handleRequest($request);
 
-        
-            if ($form->isSubmitted() && $form->isValid()) {
-                $user = $borrower->getUser();
-                $user->setPassword(
-                    $passwordEncoder->encodePassword(
-                        $user,
-                        $form->get('user')->get('plainPassword')->getData()
-                    )
-                );
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $borrower->getUser();
+            $user->setPassword(
+                $passwordEncoder->encodePassword(
+                    $user,
+                    $form->get('user')->get('plainPassword')->getData()
+                )
+            );
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($borrower);
             $entityManager->flush();
@@ -92,7 +105,7 @@ class BorrowerController extends AbstractController
      */
     public function delete(Request $request, Borrower $borrower): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$borrower->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $borrower->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($borrower);
             $entityManager->flush();

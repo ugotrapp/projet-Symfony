@@ -88,26 +88,14 @@ class BorrowerRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findOneByUser(User $user)
-    {
-        
-        return $this->createQueryBuilder('b')
-            
-            ->innerJoin('b.user', 'u')
-            ->andWhere('b.user = :user')
-            ->andWhere("u.roles LIKE '%ROLE_BORROWER%'")
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-     }
+
 
      public function findByBorrower($value)
     {
         return $this->createQueryBuilder('b')
             ->andWhere('b.lastname LIKE :borrower')
             ->setParameter('borrower', "%{$value}%")
-            ->orderBy('b.title', 'ASC')
+            ->orderBy('b.id', 'ASC')
             ->getQuery()
             ->getResult()
             ;
